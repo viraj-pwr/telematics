@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from gps3 import gps3
 gps_socket = gps3.GPSDSocket()
 data_stream = gps3.DataStream()
