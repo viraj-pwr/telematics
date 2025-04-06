@@ -79,7 +79,7 @@ def update_dashboard():
             speed_value = response.value
         obd_speed_label.config(text=f"Speed: {speed_value:.1f} MPH")
     else:
-        obd_speed_label.config(text="Speed: No Data")
+        obd_speed_label.config(text="Speed: no conn")
     
     # Schedule next update after 1 second (1000 ms)
     root.after(1000, update_dashboard)
