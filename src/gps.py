@@ -14,17 +14,28 @@
 #         print('Latitude = ', data_stream.TPV['lat'])
 #         print('Long = ', data_stream.TPV['lon'])
 
+import logging
+from abc import ABC, abstractmethod
+import numpy as np
+
+# Setup logging configuration
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 
 
 
 
+
+
+
+# Function to read 
 from gps3.agps3threaded import AGPS3mechanism
 agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms
 agps_thread.stream_data()  # From localhost (), or other hosts, by example, (host='gps.ddns.net')
 agps_thread.run_thread()  # Throttle time to sleep after an empty lookup, default '()' 0.2 two tenths of a second
 
-improt time
+import time
 while True:  # All data is available via instantiated thread data stream attribute.
     # line #140-ff of /usr/local/lib/python3.5/dist-packages/gps3/agps.py
     print('---------------------')
