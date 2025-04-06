@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import tkinter as tk
 from gps3.agps3threaded import AGPS3mechanism
 import obd
@@ -89,3 +91,8 @@ update_dashboard()
 
 # Run the GUI event loop
 root.mainloop()
+
+def exit_dashboard(event):
+    root.destroy()
+
+root.bind("<Escape>", exit_dashboard)
