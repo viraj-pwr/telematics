@@ -3,6 +3,23 @@
 import tkinter as tk
 from gps3.agps3threaded import AGPS3mechanism
 import obd
+import datetime
+
+def convert_utc_to_local(utc_time_str):
+    """
+    Convert a UTC ISO8601 time string (e.g., "2025-04-06T12:30:40.000Z")
+    to local time string in format "DD Month YYYY HH:MM:SS".
+    """
+    try:
+        # Try parsing with microseconds
+        utc_dt = datetime.datetime.strptime(utc_time_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+    except ValueError:
+        # Fallback if microseconds are missing
+        utc_dt = datetime.datetime.strptime(utc_time_str, "%Y-%m-%dT%H:%M:%SZ")
+    # Set timezone info to UTC and convert to local time
+    utc_dt = utc_dt.replace(tzinfo=datetime.timezone.utc)
+    local_dt = utc_dt.astimezone()  # uses system local timezone
+    return local_dt.strftime("%d %B %Y %H:%M:%S")  # e.g., "06 April 2025 12:30:40"
 
 # Start the GPS thread
 agps_thread = AGPS3mechanism()  # Instantiate AGPS3 mechanism
@@ -62,8 +79,13 @@ def update_dashboard():
     lon = agps_thread.data_stream.lon
     gps_speed = agps_thread.data_stream.speed
     track = agps_thread.data_stream.track
-
-    time_label.config(text=f"Time: {time_val if time_val else '--'}")
+    
+    if time_val and time_val != '--':
+        local_time = convert_utc_to_local(time_val)
+    else:
+        local_time = '--'
+    
+    time_label.config(text=f"Time: {local_time}")
     lat_label.config(text=f"Lat: {lat if lat else '--'}")
     lon_label.config(text=f"Lon: {lon if lon else '--'}")
     gps_speed_label.config(text=f"GPS Speed: {gps_speed if gps_speed else '--'} MPH")
@@ -79,7 +101,7 @@ def update_dashboard():
             speed_value = response.value
         obd_speed_label.config(text=f"Speed: {speed_value:.1f} MPH")
     else:
-        obd_speed_label.config(text="Speed: no conn")
+        obd_speed_label.config(text="Speed: No Data")
     
     # Schedule next update after 1 second (1000 ms)
     root.after(1000, update_dashboard)
