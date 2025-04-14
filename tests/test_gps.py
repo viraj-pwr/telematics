@@ -2,5 +2,8 @@
 
 
 def gps_test() -> list:
-    
+    '''
+    Function to test GPS data read 
+    '''
+    gps_data = 
     
