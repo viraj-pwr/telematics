@@ -92,16 +92,20 @@ def update_dashboard():
     course_label.config(text=f"Course: {track if track else '--'}")
     
     # --- Update OBD Data ---
-    response = connection.query(obd.commands.SPEED)
-    if response.value is not None:
-        try:
-            mph_speed = response.value.to("mph")
-            speed_value = mph_speed.magnitude
-        except Exception:
-            speed_value = response.value
-        obd_speed_label.config(text=f"Speed: {speed_value:.1f} MPH")
-    else:
-        obd_speed_label.config(text="Speed: No Data")
+    # response = connection.query(obd.commands.SPEED)
+    # if response.value is not None:
+    #     try:
+    #         mph_speed = response.value.to("mph")
+    #         speed_value = mph_speed.magnitude
+    #     except Exception:
+    #         speed_value = response.value
+    #     obd_speed_label.config(text=f"Speed: {speed_value:.1f} MPH")
+    # else:
+    #     obd_speed_label.config(text="Speed: No Data")
+        
+    # Display RPM Test
+    response_rpm = connection.query(obd.commands.RPM).value.magnitude
+    obd_speed_label.config(text=f"Speed: {response_rpm:.1f} RPM")
     
     # Schedule next update after 1 second (1000 ms)
     root.after(1000, update_dashboard)
