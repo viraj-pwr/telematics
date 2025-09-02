@@ -23,12 +23,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-
-
-
-
-
-
 # Function to read 
 from gps3.agps3threaded import AGPS3mechanism
 agps_thread = AGPS3mechanism()  # Instantiate AGPS3 Mechanisms

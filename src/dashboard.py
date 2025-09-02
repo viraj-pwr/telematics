@@ -4,6 +4,47 @@ import tkinter as tk
 from gps3.agps3threaded import AGPS3mechanism
 import obd
 import datetime
+import csv
+import os
+
+import pandas as pd
+
+def save_data_to_csv(lat, lon, gps_speed, timestamp, obd_value, obd_type="RPM"):
+    """
+    Save GPS and OBD data to a CSV file.
+    
+    Args:
+        lat: Latitude value
+        lon: Longitude value  
+        gps_speed: GPS speed value
+        timestamp: Timestamp string
+        obd_value: OBD sensor value
+        obd_type: Type of OBD sensor (default: RPM)
+    """
+    csv_filename = "telematics_data.csv"
+    file_exists = os.path.exists(csv_filename)
+    
+    try:
+        with open(csv_filename, 'a', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['timestamp', 'latitude', 'longitude', 'gps_speed', 'obd_type', 'obd_value']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            
+            # Write header if file is new
+            if not file_exists:
+                writer.writeheader()
+            
+            # Write data row
+            writer.writerow({
+                'timestamp': timestamp if timestamp else '--',
+                'latitude': lat if lat else '--',
+                'longitude': lon if lon else '--',
+                'gps_speed': gps_speed if gps_speed else '--',
+                'obd_type': obd_type,
+                'obd_value': obd_value if obd_value is not None else '--'
+            })
+            
+    except Exception as e:
+        print(f"Error saving data to CSV: {e}")
 
 def convert_utc_to_local(utc_time_str):
     """
@@ -106,6 +147,11 @@ def update_dashboard():
     # Display RPM Test
     response_rpm = connection.query(obd.commands.RPM).value.magnitude
     obd_speed_label.config(text=f"Speed: {response_rpm:.1f} RPM")
+    
+    # Save data to CSV file
+    save_data_to_csv(lat, lon, gps_speed, time_val, response_rpm, "RPM")
+
+
     
     # Schedule next update after 1 second (1000 ms)
     root.after(1000, update_dashboard)
