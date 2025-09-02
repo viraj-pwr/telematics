@@ -7,7 +7,7 @@ import datetime
 import csv
 import os
 
-import pandas as pd
+
 
 def save_data_to_csv(lat, lon, gps_speed, timestamp, obd_value, obd_type="RPM"):
     """
