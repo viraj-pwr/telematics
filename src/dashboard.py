@@ -11,7 +11,7 @@ import pandas as pd
 
 def save_data_to_csv(lat, lon, gps_speed, timestamp, obd_value, obd_type="RPM"):
     """
-    Save GPS and OBD data to a CSV file.
+    Save GPS and OBD data to a CSV file on external drive.
     
     Args:
         lat: Latitude value
@@ -21,7 +21,17 @@ def save_data_to_csv(lat, lon, gps_speed, timestamp, obd_value, obd_type="RPM"):
         obd_value: OBD sensor value
         obd_type: Type of OBD sensor (default: RPM)
     """
-    csv_filename = "telematics_data.csv"
+    # External drive path - adjust if your mount point is different
+    external_drive_path = "/media/viraj"  # Common default mount point for Raspberry Pi
+    csv_filename = os.path.join(external_drive_path, "telematics_data.csv")
+    
+    # Check if external drive is accessible
+    if not os.path.exists(external_drive_path):
+        print(f"External drive not found at {external_drive_path}")
+        # Fallback to local directory if external drive is not available
+        csv_filename = "telematics_data.csv"
+        print("Falling back to local directory for CSV storage")
+    
     file_exists = os.path.exists(csv_filename)
     
     try:
@@ -45,6 +55,7 @@ def save_data_to_csv(lat, lon, gps_speed, timestamp, obd_value, obd_type="RPM"):
             
     except Exception as e:
         print(f"Error saving data to CSV: {e}")
+        print(f"Attempted to save to: {csv_filename}")
 
 def convert_utc_to_local(utc_time_str):
     """
