@@ -169,6 +169,6 @@ def update_dashboard():
 
 # Start the update loop
 update_dashboard()
-
+print("Dashboard started")
 # Run the GUI event loop
 root.mainloop()
